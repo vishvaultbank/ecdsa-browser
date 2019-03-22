@@ -8,15 +8,18 @@
     "js-sha3": "^0.8.0",
     "secp256k1": "^3.6.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "browserify": "^16.2.3"
+  },
   "scripts": {
+    "build": "browserify main.js -o bundle.js -s helper",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vishvaultbank/ecdsa-browser.git"
   },
-  "author": "",
+  "author": "Viswanath Kapavarapu",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/vishvaultbank/ecdsa-browser/issues"

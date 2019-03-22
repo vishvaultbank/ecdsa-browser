@@ -1,0 +1,150 @@
+<html>
+
+<head>
+    <title>ECDSA using plain JS</title>
+</head>
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0px 10% 0px 10%;
+        width: 80%;
+    }
+
+    .main {
+        font-size: 16px;
+    }
+
+    button {
+        border-width: 1px solid;
+        border-radius: 4px;
+        font-size: 0.875rem;
+    }
+
+    #heading {
+        font-size: 50px;
+        font-weight: bold;
+        color: #313131;
+        background-color: lightgray;
+        text-align: center;
+    }
+
+    #publicKey,
+    #privateKey,
+    #r,
+    #s,
+    #nonce {
+        font-size: 13px;
+        overflow: hidden;
+    }
+
+    input, textarea {
+        width: 30%;
+        height: 10%;
+    }
+
+    table {
+        width: 50%
+    }
+
+</style>
+
+<body class="main">
+    <div id="heading" style="text-align: center">
+        Hi there!
+    </div>
+    <br>
+
+    <div class="generate">
+        Click the button below to generate a keypair for user.
+        <br>
+        Private Key:
+        <span id="privateKey"></span>
+        <br>
+        Public Key:
+        <span id="publicKey"></span>
+        <br>
+        <button onclick="generate()">Generate</button>
+    </div>
+
+    <p></p>
+
+    <div class="sign">
+        Enter a message to be signed using the above generated keypair:
+        <br>
+        <textarea type="text" id="signingMessage"></textarea>
+        <br>
+        r:
+        <span id="r"></span>
+        <br>
+        s:
+        <span id="s"></span>
+        <br>
+        nonce:
+        <span id="nonce"></span>
+        <br>
+        <button onclick="sign()">Sign</button>
+    </div>
+
+    <p></p>
+
+    <div class="verify">
+        Decode a public key from a signature and message:
+        <br>
+        <table>
+            <thead>
+                <td style="width: 100px"></td>
+                <td style="width: 400px"></td>
+            </thead>
+            <tr>
+                <td>message:</td>
+                <td><textarea type="text" id="verifySignMessage"></textarea></td>
+            </tr>
+            <tr>
+                <td>public key:</td>
+                <td><input id="_pubKey"></td>
+            </tr>
+            <tr>
+                <td>r:</td>
+                <td><input id="_r"></td>
+            </tr>
+            <tr>
+                <td>s:</td>
+                <td><input id="_s"></td>
+            </tr>
+            <tr>
+                <td>nonce:</td>
+                <td><input id="_nonce"></td>
+            </tr>
+        </table>
+        <button onclick="verify()">Verify</button>
+    </div>
+</body>
+<script src="bundle.js"></script>
+<script>
+    function generate() {
+        const res = helper.generate();
+        document.getElementById("privateKey").innerHTML = res.privateKey;
+        document.getElementById("publicKey").innerHTML = res.publicKey;
+
+    }
+
+    function sign() {
+        const msg = document.getElementById("signingMessage").value;
+        const signature = helper.signAMessage(msg);
+        document.getElementById("r").innerHTML = signature.r;
+        document.getElementById("s").innerHTML = signature.s;
+        document.getElementById("nonce").innerHTML = signature.nonce;
+    }
+
+    function verify() {
+        const msg = document.getElementById("verifySignMessage").value;
+        const pubKey = document.getElementById("_pubKey").value;
+        const r = document.getElementById("_r").value;
+        const s = document.getElementById("_s").value;
+        const nonce = document.getElementById("_nonce").value;
+        const verified = helper.verifySignedMessage(pubKey, msg, nonce, r, s);
+        console.log(verified);
+    }
+</script>
+
+</html>

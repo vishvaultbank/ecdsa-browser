@@ -1,6 +1,6 @@
-let sha3 = require('js-sha3');
-let elliptic = require('elliptic');
-let ec = new elliptic.ec('secp256k1');
+const elliptic = require('elliptic');
+const ec = new elliptic.ec('secp256k1');
+const sha3 = require('js-sha3');
 
 let keyPair;
 
@@ -16,7 +16,7 @@ function generate() {
     console.log();
     return {
         privateKey: privKey,
-        publicKey: pubKey.encode("hex")
+        publicKey: pubKey.encodeCompressed("hex")
     }
 };
 
@@ -31,13 +31,18 @@ function getPublicKey() {
     console.log();
 };
 
-function signAMessage(msg) {
-    let msgHash = sha3.keccak256(msg);
+function signAMessage(msg, nonce = Date.now()) {
+    const messageAsJson = {
+        "message": msg,
+        "nonce": nonce
+    };
+    const messageInStr = JSON.stringify(messageAsJson);
+    let msgHash = sha3.keccak256(messageInStr);
     let privKey = keyPair.getPrivate("hex");
     let signature = ec.sign(msgHash, privKey, "hex", {
         canonical: true
     });
-    console.log(`Msg: ${msg}`);
+    console.log(`Msg: ${messageInStr}`);
     console.log(`Msg hash: ${msgHash}`);
     console.log("Signature:", signature);
 
@@ -51,13 +56,36 @@ function signAMessage(msg) {
     let validSig = ec.verify(msgHash, signature, pubKeyRecovered);
     console.log("Signature valid?", validSig);
     return {
-        r: signature.r.toString(),
-        s: signature.s.toString()
+        r: signature.r.toString("hex"),
+        s: signature.s.toString("hex"),
+        nonce: nonce
     }
+}
+
+function verifySignedMessage(pubKey, msg, nonce, r, s) {
+    const key = ec.keyFromPublic(pubKey, 'hex');
+    const signature = {
+        r: r,
+        s: s
+    };
+    const messageAsJson = {
+        "message": msg,
+        "nonce": parseInt(nonce)
+    };
+    const messageInStr = JSON.stringify(messageAsJson);
+    let msgHash = sha3.keccak256(messageInStr);
+    console.log(`Msg: ${messageInStr}`);
+    console.log(`Msg hash: ${msgHash}`);
+    console.log("Signature:", signature);
+
+    let validSig = key.verify(msgHash, signature);
+    console.log("Signature valid?", validSig);
+    return validSig;
 }
 
 module.exports = {
     generate: generate,
     getPublicKey: getPublicKey,
-    signAMessage: signAMessage
+    signAMessage: signAMessage,
+    verifySignedMessage: verifySignedMessage
 }

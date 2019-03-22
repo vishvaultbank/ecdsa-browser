@@ -30,6 +30,8 @@
 
     #publicKey,
     #privateKey,
+    #_privateKey,
+    #_publicKey,
     #r,
     #s,
     #nonce {
@@ -37,15 +39,23 @@
         overflow: hidden;
     }
 
-    input, textarea {
+    #signingMessage,
+    #_privateKey {
         width: 30%;
         height: 10%;
     }
 
+    #verifySignMessage,
+    #_pubKey,
+    #_r,
+    #_s,
+    #_nonce  {
+        width: 100%;
+    }   
+
     table {
         width: 50%
     }
-
 </style>
 
 <body class="main">
@@ -64,6 +74,20 @@
         <span id="publicKey"></span>
         <br>
         <button onclick="generate()">Generate</button>
+    </div>
+
+    <p></p>
+
+    <div class="load">
+        Already have a private key? Load it from here
+        <br>
+        Private Key:
+        <input id="_privateKey">
+        <br>
+        Public Key:
+        <span id="_publicKey">
+            <br>
+            <button onclick="load()">Load</button>
     </div>
 
     <p></p>
@@ -92,8 +116,8 @@
         <br>
         <table>
             <thead>
-                <td style="width: 100px"></td>
-                <td style="width: 400px"></td>
+                <td></td>
+                <td></td>
             </thead>
             <tr>
                 <td>message:</td>
@@ -116,16 +140,24 @@
                 <td><input id="_nonce"></td>
             </tr>
         </table>
+        Is signature valid? 
+        <span id="verified"></span>
+        <br>
         <button onclick="verify()">Verify</button>
     </div>
 </body>
 <script src="bundle.js"></script>
 <script>
+    function load() {
+        const private = document.getElementById("_privateKey").value;
+        const res = helper.getPublicKey(private);
+        document.getElementById("_publicKey").innerHTML = res.publicKey;
+    }
+
     function generate() {
         const res = helper.generate();
         document.getElementById("privateKey").innerHTML = res.privateKey;
         document.getElementById("publicKey").innerHTML = res.publicKey;
-
     }
 
     function sign() {
@@ -143,7 +175,7 @@
         const s = document.getElementById("_s").value;
         const nonce = document.getElementById("_nonce").value;
         const verified = helper.verifySignedMessage(pubKey, msg, nonce, r, s);
-        console.log(verified);
+        document.getElementById("verified").innerHTML = verified;
     }
 </script>
 

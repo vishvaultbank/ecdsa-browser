@@ -20,15 +20,17 @@ function generate() {
     }
 };
 
-function getPublicKey() {
-    let privKey = keyPair.getPrivate("hex");
+function getPublicKey(priv) {
+    keyPair = ec.keyFromPrivate(priv, "hex");
     let pubKey = keyPair.getPublic();
-    console.log(`Private key: ${privKey}`);
     console.log("Public key :", pubKey.encode("hex").substr(2));
     console.log("Public key (compressed):",
         pubKey.encodeCompressed("hex"));
 
     console.log();
+    return {
+        publicKey: pubKey.encodeCompressed("hex")
+    }
 };
 
 function signAMessage(msg, nonce = Date.now()) {

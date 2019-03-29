@@ -35,7 +35,7 @@ function getPublicKey(priv) {
 };
 
 function signAMessage(msg, nonce = Date.now()) {
-    const messageAsJson = JSON.stringify(msg);
+    const messageAsJson = JSON.parse(msg);
     messageAsJson["userNonce"] = nonce;
     const jsonWithoutWhitespace = removeWhitespace(messageAsJson);
     const messageInStr = stringify(jsonWithoutWhitespace);
@@ -70,7 +70,7 @@ function verifySignedMessage(pubKey, msg, nonce, r, s) {
         r: r,
         s: s
     };
-    const messageAsJson = JSON.stringify(msg);
+    const messageAsJson = JSON.parse(msg);
     messageAsJson["userNonce"] = nonce;
     const jsonWithoutWhitespace = removeWhitespace(messageAsJson);
     console.log(jsonWithoutWhitespace);

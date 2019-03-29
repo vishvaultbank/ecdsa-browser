@@ -35,10 +35,8 @@ function getPublicKey(priv) {
 };
 
 function signAMessage(msg, nonce = Date.now()) {
-    const messageAsJson = {
-        "message": msg,
-        "nonce": nonce
-    };
+    const messageAsJson = JSON.stringify(msg);
+    messageAsJson["userNonce"] = nonce;
     const jsonWithoutWhitespace = removeWhitespace(messageAsJson);
     const messageInStr = stringify(jsonWithoutWhitespace);
     let msgHash = sha3.keccak256(messageInStr);

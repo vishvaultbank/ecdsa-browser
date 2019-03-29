@@ -1,6 +1,7 @@
 const elliptic = require('elliptic');
 const ec = new elliptic.ec('secp256k1');
 const sha3 = require('js-sha3');
+const stringify = require("canonical-json");
 
 let keyPair;
 
@@ -38,7 +39,8 @@ function signAMessage(msg, nonce = Date.now()) {
         "message": msg,
         "nonce": nonce
     };
-    const messageInStr = JSON.stringify(messageAsJson);
+    const jsonWithoutWhitespace = jsonWithoutWhitespace(messageAsJson);
+    const messageInStr = stringify(jsonWithoutWhitespace);
     let msgHash = sha3.keccak256(messageInStr);
     let privKey = keyPair.getPrivate("hex");
     let signature = ec.sign(msgHash, privKey, "hex", {
@@ -72,9 +74,10 @@ function verifySignedMessage(pubKey, msg, nonce, r, s) {
     };
     const messageAsJson = {
         "message": msg,
-        "nonce": parseInt(nonce)
+        "userNonce": parseInt(nonce)
     };
-    const messageInStr = JSON.stringify(messageAsJson);
+    const jsonWithoutWhitespace = jsonWithoutWhitespace(messageAsJson);
+    const messageInStr = stringify(jsonWithoutWhitespace);
     let msgHash = sha3.keccak256(messageInStr);
     console.log(`Msg: ${messageInStr}`);
     console.log(`Msg hash: ${msgHash}`);
@@ -83,6 +86,10 @@ function verifySignedMessage(pubKey, msg, nonce, r, s) {
     let validSig = key.verify(msgHash, signature);
     console.log("Signature valid?", validSig);
     return validSig;
+}
+
+function jsonWithoutWhitespace(res) {
+    return JSON.parse(JSON.stringify(res));
 }
 
 module.exports = {

@@ -39,7 +39,7 @@ function signAMessage(msg, nonce = Date.now()) {
         "message": msg,
         "nonce": nonce
     };
-    const jsonWithoutWhitespace = jsonWithoutWhitespace(messageAsJson);
+    const jsonWithoutWhitespace = removeWhitespace(messageAsJson);
     const messageInStr = stringify(jsonWithoutWhitespace);
     let msgHash = sha3.keccak256(messageInStr);
     let privKey = keyPair.getPrivate("hex");
@@ -76,7 +76,8 @@ function verifySignedMessage(pubKey, msg, nonce, r, s) {
         "message": msg,
         "userNonce": parseInt(nonce)
     };
-    const jsonWithoutWhitespace = jsonWithoutWhitespace(messageAsJson);
+    const jsonWithoutWhitespace = removeWhitespace(messageAsJson);
+    console.log(jsonWithoutWhitespace);
     const messageInStr = stringify(jsonWithoutWhitespace);
     let msgHash = sha3.keccak256(messageInStr);
     console.log(`Msg: ${messageInStr}`);
@@ -88,7 +89,7 @@ function verifySignedMessage(pubKey, msg, nonce, r, s) {
     return validSig;
 }
 
-function jsonWithoutWhitespace(res) {
+function removeWhitespace(res) {
     return JSON.parse(JSON.stringify(res));
 }
 

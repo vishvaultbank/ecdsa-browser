@@ -72,10 +72,8 @@ function verifySignedMessage(pubKey, msg, nonce, r, s) {
         r: r,
         s: s
     };
-    const messageAsJson = {
-        "message": msg,
-        "userNonce": parseInt(nonce)
-    };
+    const messageAsJson = JSON.stringify(msg);
+    messageAsJson["userNonce"] = nonce;
     const jsonWithoutWhitespace = removeWhitespace(messageAsJson);
     console.log(jsonWithoutWhitespace);
     const messageInStr = stringify(jsonWithoutWhitespace);

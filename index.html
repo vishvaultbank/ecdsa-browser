@@ -3,6 +3,7 @@
 <head>
     <title>ECDSA using plain JS</title>
 </head>
+<link rel="stylesheet" type="text/css" href="checkmark.css">
 <style>
     body {
         font-family: Arial, Helvetica, sans-serif;
@@ -202,13 +203,32 @@
                     <input id="_nonce" placeholder="nonce">
                 </div>
                 <div>
-                    Is signature valid?
-                    <span id="verified"></span>
+                    <button onclick="verify()">Verify</button>
+                    <div class="success">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                            <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6"
+                                stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                            <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6"
+                                stroke-linecap="round" stroke-miterlimit="10"
+                                points="100.2,40.2 51.5,88.8 29.8,67.5 " />
+                        </svg>
+                        <p>Verified!</p>
+                    </div>
+
+                    <div class="error">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                            <circle class="path circle" fill="none" stroke="#D06079" stroke-width="6"
+                                stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                            <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round"
+                                stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3" />
+                            <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round"
+                                stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2" />
+                        </svg>
+                        <p>Bummer!</p>
+                    </div>
                 </div>
-                <button onclick="verify()">Verify</button>
             </div>
-    </div>
-    </section>
+        </section>
 
 </body>
 <script src="jquery-3.3.1.slim.js"></script>
@@ -230,9 +250,8 @@
     }
 
     function sign() {
-        const msg = $("#signingMessage").val();
-
         try {
+            const msg = $("#signingMessage").val();
             const signature = helper.signAMessage(msg);
 
             $("#sign-reponse").html(JSON.stringify(signature, null, 4));
@@ -243,13 +262,18 @@
     }
 
     function verify() {
-        const msg = $("#verifySignMessage").val();
-        const pubKey = $("#_pubKey").val();
-        const r = $("#_r").val();
-        const s = $("#_s").val();
-        const nonce = $("#_nonce").val();
-        const verified = helper.verifySignedMessage(pubKey, msg, nonce, r, s);
-        $("#verified").html(verified);
+        try {
+            const msg = $("#verifySignMessage").val();
+            const pubKey = $("#_pubKey").val();
+            const r = $("#_r").val();
+            const s = $("#_s").val();
+            const nonce = $("#_nonce").val();
+            const verified = helper.verifySignedMessage(pubKey, msg, parseInt(nonce), r, s);
+            $(".verify .success").show();
+        } catch (err) {
+            $(".verify .error").show();
+        }
+
     }
 
     function copyToClipboard(elementId) {

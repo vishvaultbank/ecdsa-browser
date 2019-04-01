@@ -6,55 +6,80 @@
 <style>
     body {
         font-family: Arial, Helvetica, sans-serif;
-        margin: 0px 10% 0px 10%;
-        width: 80%;
-    }
-
-    .main {
-        font-size: 16px;
+        margin: 0px 0px 0px 0px;
     }
 
     button {
-        border-width: 1px solid;
+        border-width: 1px solid rgba(27, 31, 35, .2);
         border-radius: 4px;
         font-size: 0.875rem;
+        font-weight: 600;
+        margin: 4px;
+        padding: 6px 12px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #e6ebf1;
+        background-position: -.5em;
+        border-color: rgba(27, 31, 35, .35);
+    }
+
+    textarea {
+        display: block;
+        background-color: #fafbfc;
+        border-radius: 4px;
+        margin: 4px;
+        padding: 8px;
+        height: 100px;
+        width: 100%;
+    }
+
+    input {
+        height: 30px;
+        width: 100%;
+    }
+
+    textarea:focus {
+        border-color: #2188ff;
+        box-shadow: inset 0 1px 2px rgba(27, 31, 35, .075), 0 0 0 0.2em rgba(3, 102, 214, .3);
+    }
+
+    .main {
+        font-size: 13px;
+        padding-bottom: 10px;
+    }
+
+    .inner {
+        width: 800px;
+        margin: auto;
+        height: auto;
+        font-size: 14px;
+    }
+
+    .verify div,
+    .sign,
+    .load,
+    .generate {
+        padding: 4px;
+    }
+
+    .copy {
+        float: right;
+        padding: 2px;
+    }
+
+    .response-viewer {
+        display: none;
     }
 
     #heading {
-        font-size: 50px;
+        font-size: 16px;
         font-weight: bold;
-        color: #313131;
-        background-color: lightgray;
+        color: white;
+        background-color: #24292e;
         text-align: center;
-    }
-
-    #publicKey,
-    #privateKey,
-    #_privateKey,
-    #_publicKey,
-    #r,
-    #s,
-    #nonce {
-        font-size: 13px;
-        overflow: hidden;
-    }
-
-    #signingMessage,
-    #_privateKey {
-        width: 30%;
-        height: 10%;
-    }
-
-    #verifySignMessage,
-    #_pubKey,
-    #_r,
-    #_s,
-    #_nonce  {
-        width: 100%;
-    }   
-
-    table {
-        width: 50%
+        padding: 8px 0px 8px 0px;
     }
 </style>
 
@@ -64,118 +89,176 @@
     </div>
     <br>
 
-    <div class="generate">
-        Click the button below to generate a keypair for user.
-        <br>
-        Private Key:
-        <span id="privateKey"></span>
-        <br>
-        Public Key:
-        <span id="publicKey"></span>
-        <br>
-        <button onclick="generate()">Generate</button>
+    <div class="inner">
+        <h3>Step 1: Generate</h3>
+        <section>
+            <div class="generate">
+                <div>
+                    Click the button below to generate a keypair for user.
+                </div>
+                <div>
+                    <button onclick="generate()">Generate</button>
+                </div>
+                <div class="response-viewer">
+                    <div class="copy">
+                        <button onclick="copyToClipboard('generate-reponse')">Copy
+                            <svg width="14" height="14" viewBox="0 0 16 16">
+                                <defs>
+                                    <path id="copy"
+                                        d="M1.945 1h8.866a.822.822 0 0 1 0 1.645H3.719a.945.945 0 0 0-.945.945v7.927a.887.887 0 0 1-1.774 0V1.945C1 1.423 1.423 1 1.945 1zm2.658 2.596h9.452c.522 0 .945.424.945.946v9.513a.945.945 0 0 1-.945.945H4.603a.945.945 0 0 1-.945-.945V4.542c0-.522.423-.946.945-.946z">
+                                    </path>
+                                </defs>
+                                <use fill="#282828" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    xlink:href="#copy"></use>
+                            </svg></button>
+                    </div>
+                    <div>
+                        <textarea id="generate-reponse"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="load">
+                <div>
+                    Already have a private key? Load it from here
+                </div>
+                <div>
+                    <textarea id="_privateKey" placeholder="Private Key"></textarea>
+                </div>
+                <div>
+                    <button onclick="load()">Load</button>
+                </div>
+                <div class="response-viewer">
+                    <div class="copy">
+                        <button onclick="copyToClipboard('load-reponse')">Copy
+                            <svg width="14" height="14" viewBox="0 0 16 16">
+                                <defs>
+                                    <path id="copy"
+                                        d="M1.945 1h8.866a.822.822 0 0 1 0 1.645H3.719a.945.945 0 0 0-.945.945v7.927a.887.887 0 0 1-1.774 0V1.945C1 1.423 1.423 1 1.945 1zm2.658 2.596h9.452c.522 0 .945.424.945.946v9.513a.945.945 0 0 1-.945.945H4.603a.945.945 0 0 1-.945-.945V4.542c0-.522.423-.946.945-.946z">
+                                    </path>
+                                </defs>
+                                <use fill="#282828" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    xlink:href="#copy"></use>
+                            </svg></button>
+                    </div>
+                    <div>
+                        <textarea id="load-reponse"></textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <h3>Step 2: Sign</h3>
+        <section>
+            <div class="sign">
+                <div>
+                    Enter a message to be signed using the above generated keypair:
+                </div>
+                <div>
+                    <textarea type="text" id="signingMessage" placeholder="Message"></textarea>
+                </div>
+                <div>
+                    <button onclick="sign()">Sign</button>
+                </div>
+                <div class="response-viewer">
+                    <div class="copy">
+                        <button onclick="copyToClipboard('sign-reponse')">Copy
+                            <svg width="14" height="14" viewBox="0 0 16 16">
+                                <defs>
+                                    <path id="copy"
+                                        d="M1.945 1h8.866a.822.822 0 0 1 0 1.645H3.719a.945.945 0 0 0-.945.945v7.927a.887.887 0 0 1-1.774 0V1.945C1 1.423 1.423 1 1.945 1zm2.658 2.596h9.452c.522 0 .945.424.945.946v9.513a.945.945 0 0 1-.945.945H4.603a.945.945 0 0 1-.945-.945V4.542c0-.522.423-.946.945-.946z">
+                                    </path>
+                                </defs>
+                                <use fill="#282828" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    xlink:href="#copy"></use>
+                            </svg></button>
+                    </div>
+                    <div>
+                        <textarea id="sign-reponse"></textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <h3>Step 3: Verify</h3>
+        <section>
+            <div class="verify">
+                <div>
+                    Decode a public key from a signature and message:
+                </div>
+                <div>
+                    <textarea type="text" id="verifySignMessage" placeholder="Message"></textarea>
+                </div>
+                <div>
+                    <input id="_pubKey" placeholder="Public Key">
+                </div>
+                <div>
+                    <input id="_r" placeholder="r">
+                </div>
+                <div>
+                    <input id="_s" placeholder="s">
+                </div>
+                <div>
+                    <input id="_nonce" placeholder="nonce">
+                </div>
+                <div>
+                    Is signature valid?
+                    <span id="verified"></span>
+                </div>
+                <button onclick="verify()">Verify</button>
+            </div>
     </div>
+    </section>
 
-    <p></p>
-
-    <div class="load">
-        Already have a private key? Load it from here
-        <br>
-        Private Key:
-        <input id="_privateKey">
-        <br>
-        Public Key:
-        <span id="_publicKey">
-            <br>
-            <button onclick="load()">Load</button>
-    </div>
-
-    <p></p>
-
-    <div class="sign">
-        Enter a message to be signed using the above generated keypair:
-        <br>
-        <textarea type="text" id="signingMessage"></textarea>
-        <br>
-        r:
-        <span id="r"></span>
-        <br>
-        s:
-        <span id="s"></span>
-        <br>
-        nonce:
-        <span id="nonce"></span>
-        <br>
-        <button onclick="sign()">Sign</button>
-    </div>
-
-    <p></p>
-
-    <div class="verify">
-        Decode a public key from a signature and message:
-        <br>
-        <table>
-            <thead>
-                <td></td>
-                <td></td>
-            </thead>
-            <tr>
-                <td>message:</td>
-                <td><textarea type="text" id="verifySignMessage"></textarea></td>
-            </tr>
-            <tr>
-                <td>public key:</td>
-                <td><input id="_pubKey"></td>
-            </tr>
-            <tr>
-                <td>r:</td>
-                <td><input id="_r"></td>
-            </tr>
-            <tr>
-                <td>s:</td>
-                <td><input id="_s"></td>
-            </tr>
-            <tr>
-                <td>nonce:</td>
-                <td><input id="_nonce"></td>
-            </tr>
-        </table>
-        Is signature valid? 
-        <span id="verified"></span>
-        <br>
-        <button onclick="verify()">Verify</button>
-    </div>
 </body>
+<script src="jquery-3.3.1.slim.js"></script>
 <script src="bundle.js"></script>
 <script>
     function load() {
-        const private = document.getElementById("_privateKey").value;
+        const private = $("#_privateKey").val();
         const res = helper.getPublicKey(private);
-        document.getElementById("_publicKey").innerHTML = res.publicKey;
+        $("#load-reponse").html(JSON.stringify(res, null, 4));
+        $('.load .response-viewer').show();
+        $('.generate').hide();
     }
 
     function generate() {
         const res = helper.generate();
-        document.getElementById("privateKey").innerHTML = res.privateKey;
-        document.getElementById("publicKey").innerHTML = res.publicKey;
+        $("#generate-reponse").html(JSON.stringify(res, null, 4));
+        $('.generate .response-viewer').show();
+        $('.load').hide();
     }
 
     function sign() {
-        const msg = document.getElementById("signingMessage").value;
-        const signature = helper.signAMessage(msg);
-        document.getElementById("r").innerHTML = signature.r;
-        document.getElementById("s").innerHTML = signature.s;
-        document.getElementById("nonce").innerHTML = signature.nonce;
+        const msg = $("#signingMessage").val();
+
+        try {
+            const signature = helper.signAMessage(msg);
+
+            $("#sign-reponse").html(JSON.stringify(signature, null, 4));
+            $('.sign .response-viewer').show();
+        } catch (err) {
+            alert(err);
+        }
     }
 
     function verify() {
-        const msg = document.getElementById("verifySignMessage").value;
-        const pubKey = document.getElementById("_pubKey").value;
-        const r = document.getElementById("_r").value;
-        const s = document.getElementById("_s").value;
-        const nonce = document.getElementById("_nonce").value;
+        const msg = $("#verifySignMessage").val();
+        const pubKey = $("#_pubKey").val();
+        const r = $("#_r").val();
+        const s = $("#_s").val();
+        const nonce = $("#_nonce").val();
         const verified = helper.verifySignedMessage(pubKey, msg, nonce, r, s);
-        document.getElementById("verified").innerHTML = verified;
+        $("#verified").html(verified);
+    }
+
+    function copyToClipboard(elementId) {
+        const element = $("#" + elementId);
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(element).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
     }
 </script>
 

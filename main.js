@@ -36,32 +36,32 @@ function getPublicKey(priv) {
 
 function signAMessage(msg, nonce = Date.now()) {
     const messageAsJson = JSON.parse(msg);
-    messageAsJson["userNonce"] = nonce;
-    const jsonWithoutWhitespace = removeWhitespace(messageAsJson);
-    const messageInStr = stringify(jsonWithoutWhitespace);
-    let msgHash = sha3.keccak256(messageInStr);
-    let privKey = keyPair.getPrivate("hex");
-    let signature = ec.sign(msgHash, privKey, "hex", {
-        canonical: true
-    });
-    console.log(`Msg: ${messageInStr}`);
-    console.log(`Msg hash: ${msgHash}`);
-    console.log("Signature:", signature);
+        messageAsJson["userNonce"] = nonce;
+        const jsonWithoutWhitespace = removeWhitespace(messageAsJson);
+        const messageInStr = stringify(jsonWithoutWhitespace);
+        let msgHash = sha3.keccak256(messageInStr);
+        let privKey = keyPair.getPrivate("hex");
+        let signature = ec.sign(msgHash, privKey, "hex", {
+            canonical: true
+        });
+        console.log(`Msg: ${messageInStr}`);
+        console.log(`Msg hash: ${msgHash}`);
+        console.log("Signature:", signature);
 
-    console.log();
+        console.log();
 
-    let hexToDecimal = (x) => ec.keyFromPrivate(x, "hex").getPrivate().toString(10);
-    let pubKeyRecovered = ec.recoverPubKey(
-        hexToDecimal(msgHash), signature, signature.recoveryParam, "hex");
-    console.log("Recovered pubKey:", pubKeyRecovered.encodeCompressed("hex"));
+        let hexToDecimal = (x) => ec.keyFromPrivate(x, "hex").getPrivate().toString(10);
+        let pubKeyRecovered = ec.recoverPubKey(
+            hexToDecimal(msgHash), signature, signature.recoveryParam, "hex");
+        console.log("Recovered pubKey:", pubKeyRecovered.encodeCompressed("hex"));
 
-    let validSig = ec.verify(msgHash, signature, pubKeyRecovered);
-    console.log("Signature valid?", validSig);
-    return {
-        r: signature.r.toString("hex"),
-        s: signature.s.toString("hex"),
-        nonce: nonce
-    }
+        let validSig = ec.verify(msgHash, signature, pubKeyRecovered);
+        console.log("Signature valid?", validSig);
+
+        messageAsJson.r = signature.r.toString("hex");
+        messageAsJson.s = signature.s.toString("hex");
+        messageAsJson.userNonce = nonce;
+        return messageAsJson;
 }
 
 function verifySignedMessage(pubKey, msg, nonce, r, s) {

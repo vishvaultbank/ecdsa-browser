@@ -58,8 +58,10 @@ function signAMessage(msg, nonce = Date.now()) {
         let validSig = ec.verify(msgHash, signature, pubKeyRecovered);
         console.log("Signature valid?", validSig);
 
-        messageAsJson.r = signature.r.toString("hex");
-        messageAsJson.s = signature.s.toString("hex");
+        messageAsJson.signature = {
+            r: signature.r.toString("hex"),
+            s: signature.s.toString("hex")
+        };
         messageAsJson.userNonce = nonce;
         return messageAsJson;
 }

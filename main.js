@@ -1,6 +1,6 @@
 const elliptic = require('elliptic');
 const ec = new elliptic.ec('secp256k1');
-const sha3 = require('js-sha3');
+const sha256 = require('js-sha256');
 const stringify = require("canonical-json");
 
 let keyPair;
@@ -39,7 +39,7 @@ function signAMessage(msg, nonce = Date.now()) {
         messageAsJson["userNonce"] = nonce;
         const jsonWithoutWhitespace = removeWhitespace(messageAsJson);
         const messageInStr = stringify(jsonWithoutWhitespace);
-        let msgHash = sha3.keccak256(messageInStr);
+        let msgHash = sha256(messageInStr);
         let privKey = keyPair.getPrivate("hex");
         let signature = ec.sign(msgHash, privKey, "hex", {
             canonical: true
@@ -77,7 +77,7 @@ function verifySignedMessage(pubKey, msg, nonce, r, s) {
     const jsonWithoutWhitespace = removeWhitespace(messageAsJson);
     console.log(jsonWithoutWhitespace);
     const messageInStr = stringify(jsonWithoutWhitespace);
-    let msgHash = sha3.keccak256(messageInStr);
+    let msgHash = sha256(messageInStr);
     console.log(`Msg: ${messageInStr}`);
     console.log(`Msg hash: ${msgHash}`);
     console.log("Signature:", signature);

@@ -6,7 +6,7 @@
   "dependencies": {
     "canonical-json": "0.0.4",
     "elliptic": "^6.4.1",
-    "js-sha3": "^0.8.0",
+    "js-sha256": "^0.9.0",
     "secp256k1": "^3.6.2"
   },
   "devDependencies": {
@@ -18,12 +18,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vishvaultbank/ecdsa-browser.git"
+    "url": "git+https://github.com/vishvaultbank/ecdsa-for-browser.git"
   },
   "author": "Viswanath Kapavarapu",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vishvaultbank/ecdsa-browser/issues"
+    "url": "https://github.com/vishvaultbank/ecdsa-for-browser/issues"
   },
-  "homepage": "https://github.com/vishvaultbank/ecdsa-browser#readme"
+  "homepage": "https://github.com/vishvaultbank/ecdsa-for-browser#readme"
 }

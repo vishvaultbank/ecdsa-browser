@@ -59,8 +59,8 @@ function signAMessage(msg, nonce = Date.now()) {
         console.log("Signature valid?", validSig);
 
         messageAsJson.signature = {
-            r: signature.r.toString("hex"),
-            s: signature.s.toString("hex")
+            r: signature.r.toString("hex", 64),
+            s: signature.s.toString("hex", 64)
         };
         messageAsJson.userNonce = nonce;
         return messageAsJson;
